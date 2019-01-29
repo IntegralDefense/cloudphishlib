@@ -5,7 +5,7 @@ import sys
 import argparse
 import logging
 
-from cloudphishlib import cloudphish
+from cloudphishlib import cloudphish, load_config
 
 logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s - %(name)s - [%(levelname)s] %(message)s')
@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
 
+    config = load_config()
+    profiles = config.sections()
     parser = argparse.ArgumentParser(description="simple user interface to cloudphish")
+    parser.add_argument('-e', '--environment', dest='environment', choices=profiles, default='default', help='select the ace cloudphish node you want to work with.')
     parser.add_argument('-s', '--submit', dest='url', help="submit a url/check on a url")
     parser.add_argument('-r', '--reprocess', action='store_true', help="make cloudphish reprocess a url")
     parser.add_argument('-a', '--alert', action='store_true', help="ACE alert if cloudphish finds a detection, and an alert hasn't already been generated")
@@ -22,11 +25,7 @@ if __name__ == "__main__":
     parser.add_argument('-g', '--get', dest='sha256_content', help="get the cached content")
     args = parser.parse_args()
 
-    # ignore the proxy
-    if 'http_proxy' in os.environ:
-        del os.environ['https_proxy']
-
-    cp = cloudphish()
+    cp = cloudphish(profile=args.environment)
 
     if args.url:
         print(cp.submit(args.url, reprocess=args.reprocess, alert=args.alert, text=True))
