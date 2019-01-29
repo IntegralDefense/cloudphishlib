@@ -11,8 +11,6 @@ def load_config(required_keys=[]):
     """Load cloudphish configuration. Configuration files are looked for in the following locations::
         /<python-lib-where-cloudphishlib-installed>/etc/ace_cloudphish.ini
         /etc/ace/cloudphish/ace_cloudphish.ini
-        /opt/ace/etc/saq.default.ini (looks for cloudphish.1 key)
-        /opt/ace/etc/saq.ini (looks for cloudphish.1 key)
         ~/<current-user>/.ace/cloudphish/ace_cloudphish.ini
 
     Configuration items found in later config files take presendence over earlier ones.
@@ -44,32 +42,19 @@ def load_config(required_keys=[]):
 
     config.read(finds)
     return config
-    """
-    try:
-        config[profile]
-    except KeyError:
-        logger.critical("No section named '{}' in configuration files : {}".format(profile, config_paths))
-        raise
-
-    if required_keys:
-        check_config(config, required_keys)
-    """
-    #return config
 
 
 # simple api for common cloudphish requests
 class cloudphish():
-    logger = logging.getLogger(__name__)
-    # path to ca_bundle that signed the server cert
-    # leaving True, means requests will still verify
-    #CA_BUNDLE_FILE = True
-    #if 'integral_ca_bundle' in os.environ:
-    #    CA_BUNDLE_FILE = os.environ['integral_ca_bundle']
-    #elif os.path.exists(os.path.join('/','usr','local','share','ca-certificates','integral-ca.pem')):
-    #    CA_BUNDLE_FILE = os.path.join('/','usr','local','share','ca-certificates','integral-ca.pem')
-    #else:
-    #    CA_BUNDLE_FILE = os.path.join('/','opt','ace','ssl','le-chain.pem')
+    """Simple ACE Cloudphish API wrapper.
 
+    :param str profile: Specify the ACE Cloudphish environment to work with. Default works with a localhost ACE install.
+    :param str server: (optional) specify a Cloudphish server address.
+    :param str port: (optional) specify the server port.
+    :param str ca_bundle_file_path: (optional) The path to the CA bundle file authoritative for the server.
+    """
+
+    logger = logging.getLogger(__name__)
     def __init__(self, profile='default', server=None, port=None, ca_bundle_file_path=None):
 
         self.config = load_config()
