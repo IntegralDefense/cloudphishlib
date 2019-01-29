@@ -23,8 +23,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # ignore the proxy
-    if 'http_proxy' in os.environ:
-        del os.environ['https_proxy']
+    #if 'https_proxy' in os.environ:
+    #    del os.environ['https_proxy']
 
     cp = cloudphish()
 
