@@ -25,10 +25,6 @@ if __name__ == "__main__":
     parser.add_argument('-g', '--get', dest='sha256_content', help="get the cached content")
     args = parser.parse_args()
 
-    # ignore the proxy
-    #if 'https_proxy' in os.environ:
-    #    del os.environ['https_proxy']
-
     cp = cloudphish(profile=args.environment)
 
     if args.url:
